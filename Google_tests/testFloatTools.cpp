@@ -2,12 +2,10 @@
 //                                             Unit Tests for FloatTools
 //----------------------------------------------------------------------------------------------------------------------
 #include <cmath>
-#include <math.h>
 #include "../FloatTools.h"
 #include <gtest/gtest.h>
 #include <vector>
 #include <iostream>
-#include <iomanip>
 
 //----------------------------------------------------------------------------------------------------------------------
 //                                                Test approxEquals()
