@@ -59,13 +59,15 @@ TEST(FloatTools, testRandFloat01) {
     }
 }
 
-// Fill a buffer with 1000 random numbers, and make sure the same number does not appear too many times.
-// 2 or 3 occurrences of the same number is to be expected from time to time, but 100 of the same thing
-// indicates a problem. (Especially since we're setting the random seed, which produces a known-good
-// sequence.)
+//----------------------------------------------------------------------------------------------------------------------
+//                                                 Test randFloat()
 //
-// Note that for this test, we intentionally don't use approximate equality, since what we're interested in
-// is the uniqueness of bit sequences.
+// Fill a buffer with 1000 random numbers, and make sure the same number does not appear too many times. 2 or 3
+// occurrences of the same number is to be expected from time to time, but 100 of the same thing indicates a problem.
+// (Especially since were setting the random seed, which produces a known-good sequence.\) Note that for this test, we
+// intentionally don't use approximate equality, since what we're interested in is the uniqueness of bit sequences.
+//
+//----------------------------------------------------------------------------------------------------------------------
 TEST(FloatTools, testRandFloat02) {
     const int num_nums = 1000;
     const int my_rand_seed = 3245879;
@@ -89,5 +91,73 @@ TEST(FloatTools, testRandFloat02) {
             }
             ASSERT_TRUE(qty < max_allowable_occurrences);
         }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//                                                 Test randDouble()
+//
+// Ensure NaN symbol is absent.
+//
+//----------------------------------------------------------------------------------------------------------------------
+TEST(FloatTools, testRandDouble01) {
+    // Use enough trials that random generator should use all 11-bit patterns approximately 100 times each:
+    const int num_tests = 204800;
+    const int my_random_seed = 1;
+    long exponent_bits = 0x7ff0000000000000;
+    double float_version;
+    long *int_version;
+
+    // Set random seed so that test is reproducible:
+    srand(my_random_seed);
+
+    for (int i = 0; i < num_tests; ++i) {
+        float_version = FloatTools::rand_double();
+        int_version = (long*) &float_version;
+        bool success = ((*int_version) & exponent_bits) != exponent_bits;
+        if (!success) {
+            std::cout << "Here is a failure" << std::endl;
+            std::stringstream stream;
+            stream << std::endl << std::hex << (*int_version) << std::endl << exponent_bits << std::endl;
+            std::string result( stream.str() );
+            std::cout << result << std::endl;
+            std::cout << "Set a breakpoint here if you like" << std::endl;
+        }
+        ASSERT_TRUE(success);
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//                                                 Test randDouble()
+//
+// Ensure same number does not appear too many times.
+//
+//----------------------------------------------------------------------------------------------------------------------
+TEST(FloatTools, testRandDouble02) {
+    const int num_nums = 1000;
+    const int my_rand_seed = 3245999;
+    const int max_allowable_occurrences = 10;
+    int qty = 0;
+    std::vector<double> my_numbers;
+
+    // Set random seed so test is reproducible:
+    srand(my_rand_seed);
+
+    // Fill a container with random floats:
+    for (int i = 0; i < num_nums; ++i) {
+        my_numbers.push_back(FloatTools::rand_double());
+    }
+
+    for (int i = 0; i < num_nums; ++i) {
+        qty = 0;
+        for (int j = i; j < num_nums; ++j) {
+            if (my_numbers.at(i) == my_numbers.at(j)) {
+                qty++;
+            }
+        }
+        if (qty >= max_allowable_occurrences) {
+            std::cout << "set breakpoint here" << std::endl;
+        }
+        ASSERT_LT(qty, max_allowable_occurrences);
     }
 }
