@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <iostream>
+#include <complex>
 
 //----------------------------------------------------------------------------------------------------------------------
 //                                                Test approxEquals()
@@ -18,6 +19,12 @@ TEST(FloatTools, testApproxEqual01) {
     // Test the 3 parameter version:
     ASSERT_TRUE(FloatTools::approx_equal(0.0, 1E-6, 1E-5));
     ASSERT_FALSE(FloatTools::approx_equal(0.0, 1E-3, 1E-4));
+
+    ASSERT_TRUE(FloatTools::approx_equal(std::complex<float>(0.1, 0.0), std::complex<float>(0.100005, 0.0), 1E-4));
+    ASSERT_FALSE(FloatTools::approx_equal(std::complex<float>(0.1, 0.0), std::complex<float>(0.1003, 0.0), 1E-4));
+
+    ASSERT_TRUE(FloatTools::approx_equal(std::complex<float>(1.2, 1.3), std::complex<float>(1.1999999, 1.2999999), 1E-6));
+    ASSERT_FALSE(FloatTools::approx_equal(std::complex<float>(2.8, 1000.4), std::complex<float>(2.8, 1000.3), 1E-4));
 }
 
 //----------------------------------------------------------------------------------------------------------------------

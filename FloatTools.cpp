@@ -2,6 +2,8 @@
 //                                                    Float Tools 
 //----------------------------------------------------------------------------------------------------------------------
 #include <stdlib.h>
+#include <complex>
+#include <cmath>
 
 namespace FloatTools {
 
@@ -25,6 +27,14 @@ namespace FloatTools {
     }
 
     bool approx_equal(double x1, double x2) {
+        return approx_equal(x1, x2, 1E-9);
+    }
+
+    bool approx_equal(std::complex<double> x1, std::complex<double> x2, double tol) {
+        return (approx_equal(x1.real(), x2.real(), tol) && approx_equal(x1.imag(), x2.imag(), tol));
+    }
+
+    bool approx_equal(std::complex<double> x1, std::complex<double> x2) {
         return approx_equal(x1, x2, 1E-9);
     }
 
