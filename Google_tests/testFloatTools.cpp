@@ -166,3 +166,12 @@ TEST(FloatTools, testRandDouble02) {
         ASSERT_LT(qty, max_allowable_occurrences);
     }
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//                                                   Test db_up()
+//----------------------------------------------------------------------------------------------------------------------
+TEST(FloatTools, testDbUp01) {
+    ASSERT_TRUE(FloatTools::approx_equal(FloatTools::db_up_from(1.0, 3.0), 2.0, 0.01));
+    ASSERT_TRUE(FloatTools::approx_equal(FloatTools::db_up_from(1.0, 10.0), 10.0, 0.1));
+    ASSERT_TRUE(FloatTools::approx_equal(FloatTools::db_up_from(200, 6.0), 800.0, 5.0));
+}

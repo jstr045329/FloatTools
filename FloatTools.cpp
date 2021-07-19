@@ -30,6 +30,7 @@ namespace FloatTools {
         return approx_equal(x1, x2, 1E-9);
     }
 
+    // tol is applied independently to real and imaginary parts
     bool approx_equal(std::complex<double> x1, std::complex<double> x2, double tol) {
         return (approx_equal(x1.real(), x2.real(), tol) && approx_equal(x1.imag(), x2.imag(), tol));
     }
@@ -66,5 +67,21 @@ namespace FloatTools {
         } while ((x3 & exponent_bits) == exponent_bits);
         double *y = (double*) &x3;
         return *y;
+    }
+
+
+    // Magnitude squared of complex number:
+    float mag_squared(std::complex<float> x) {
+        return (x.real() * x.real() + x.imag() * x.imag());
+    }
+
+    float one_magnitude(std::complex<float> x) {
+        return std::sqrt(mag_squared(x));
+    }
+
+    double db_up_from(double x_linear, double db_up) {
+        double x_db = 10.0 * log10(x_linear);
+        double y_db = x_db + db_up;
+        return pow(10.0, 0.1 * y_db);
     }
 }
